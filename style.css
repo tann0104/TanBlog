@@ -39,15 +39,7 @@ html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
 }
 
 /* ボタンのぽよんアニメーション */
-.cute-btn {
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.cute-btn:hover {
-  transform: scale(1.08);
-}
-.cute-btn:active {
-  transform: scale(0.95);
-}
+
 
 /* ぷっくり可愛いダークモードボタン */
 .theme-toggle-btn {
