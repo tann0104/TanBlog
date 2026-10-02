@@ -48,3 +48,37 @@ html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
 .cute-btn:active {
   transform: scale(0.95);
 }
+
+/* ぷっくり可愛いダークモードボタン */
+.theme-toggle-btn {
+  background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%);
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  border: 2px solid #ffffff;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ダークモード時のボタン見た目（ネオンパープル＆ピンク） */
+html.dark .theme-toggle-btn {
+  background: linear-gradient(135deg, #4c1d95 0%, #831843 100%);
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+  border: 2px solid #a855f7;
+}
+
+/* ホバー時のぽよん拡大＆回転アニメーション */
+.theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(6deg);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.92) rotate(-6deg);
+}
+
+/* アイコン自体のふんわりアニメーション */
+#theme-icon {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-toggle-btn:hover #theme-icon {
+  transform: scale(1.2) rotate(15deg);
+}
