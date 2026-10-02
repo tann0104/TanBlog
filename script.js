@@ -55,52 +55,51 @@ async function fetchProjects() {
 }
 
 // --- 3. プロジェクト一覧の描画 ---
-function renderProjects() {
-  const keyword = searchInput.value.toLowerCase();
+function renderProjects(projects) {
+  const container = document.getElementById('projects-container');
+  container.innerHTML = '';
 
-  const filtered = allProjects.filter(p => {
-    const matchKeyword = p.title.toLowerCase().includes(keyword) || (p.description && p.description.toLowerCase().includes(keyword));
-    const matchTag = currentSelectedTag === '' || p.tag === currentSelectedTag;
-    return matchKeyword && matchTag;
-  });
-
-  if (filtered.length === 0) {
-    projectListEl.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">該当するプロジェクトが見つかりません</div>`;
+  if (projects.length === 0) {
+    container.innerHTML = '<p class="col-span-full text-center text-gray-400 py-8">該当するプロジェクトがありません 😿</p>';
     return;
   }
 
-  projectListEl.innerHTML = filtered.map(p => `
-    <article class="project-card group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+  projects.forEach(project => {
+    const card = document.createElement('div');
+    // 見やすく・かわいいカードデザイン
+    card.className = "project-card bg-white dark:bg-slate-900 border-2 border-pink-100 dark:border-purple-900/50 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between";
+
+    card.innerHTML = `
       <div>
-        <div class="flex justify-between items-start mb-3">
-          <h3 class="text-xl font-bold group-hover:text-emerald-500 transition-colors">${escapeHtml(p.title)}</h3>
-          ${p.tag ? `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">${escapeHtml(p.tag)}</span>` : ''}
-        </div>
-        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">${escapeHtml(p.description || '')}</p>
-      </div>
-
-      <!-- コメントエリア -->
-      <div class="border-t border-slate-100 dark:border-slate-800/80 pt-4 mt-auto">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Comments (${p.comments ? p.comments.length : 0})</h4>
-        
-        <div class="custom-scrollbar space-y-2 mb-4 max-h-36 overflow-y-auto pr-1">
-          ${(p.comments || []).map(c => `
-            <div class="text-xs bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
-              <span class="font-bold text-slate-700 dark:text-slate-300">${escapeHtml(c.user_name)}:</span>
-              <span class="text-slate-600 dark:text-slate-400">${escapeHtml(c.content)}</span>
-            </div>
-          `).join('')}
+        <!-- タグ ＆ アイコン -->
+        <div class="flex items-center justify-between mb-3">
+          <span class="tag-badge px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-600 dark:bg-purple-950 dark:text-purple-300 dark:border dark:border-purple-700">
+            🏷️ ${project.tag || 'Other'}
+          </span>
+          <span class="text-xs text-gray-400">✨</span>
         </div>
 
-        <!-- コメント入力 -->
-        <div class="flex gap-2">
-          <input type="text" id="name-${p.id}" placeholder="名前" class="w-1/3 px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-          <input type="text" id="comment-${p.id}" placeholder="コメントを追加..." class="w-2/3 px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-          <button onclick="addComment(${p.id})" class="px-3 py-1.5 text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition">送信</button>
-        </div>
+        <!-- タイトル -->
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 leading-snug">
+          ${project.title}
+        </h3>
+
+        <!-- 説明文 -->
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+          ${project.description || '説明はありません'}
+        </p>
       </div>
-    </article>
-  `).join('');
+
+      <!-- 下部のリンクボタン（必要な場合） -->
+      <div class="pt-3 border-t border-pink-50 dark:border-purple-900/30 flex justify-end">
+        <button class="text-xs font-bold text-pink-500 hover:text-pink-600 dark:text-purple-400 flex items-center gap-1">
+          詳細をみる ➔
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
 }
 
 // --- 4. コメント送信機能 ---
