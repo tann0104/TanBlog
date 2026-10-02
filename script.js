@@ -10,6 +10,7 @@ let currentSelectedTag = '';
 // --- DOM 要素 ---
 const themeBtn = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
+const themeText = document.getElementById('theme-text'); // テキスト追加
 const searchInput = document.getElementById('search-input');
 const projectListEl = document.getElementById('project-list');
 const tagButtons = document.querySelectorAll('.tag-btn');
@@ -17,19 +18,25 @@ const tagButtons = document.querySelectorAll('.tag-btn');
 // --- 1. ダークモード / ライトモード初期化 ---
 function initTheme() {
   const isLight = localStorage.theme === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches);
+  
   if (isLight) {
     document.documentElement.classList.remove('dark');
     themeIcon.textContent = '☀️';
+    if (themeText) themeText.textContent = 'Day ✨';
   } else {
     document.documentElement.classList.add('dark');
     themeIcon.textContent = '🌙';
+    if (themeText) themeText.textContent = 'Night 🎀';
   }
 }
 
 themeBtn.addEventListener('click', () => {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  
+  // アイコンとテキストの切り替え
   themeIcon.textContent = isDark ? '🌙' : '☀️';
+  if (themeText) themeText.textContent = isDark ? 'Night 🎀' : 'Day ✨';
 });
 
 // --- 2. データ取得 (Supabase) ---
