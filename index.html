@@ -1,176 +1,58 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>マイ ポートフォリオ</title>
+  <title>Portfolio Showcase</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 外部CSS -->
+  <link rel="stylesheet" href="style.css">
+
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    /* ダーク / ライトモード変数 */
-    :root {
-      --bg: #ffffff;
-      --text: #1a1a1a;
-      --card-bg: #f4f4f5;
-      --border: #e4e4e7;
-    }
-    [data-theme="dark"] {
-      --bg: #121212;
-      --text: #f4f4f5;
-      --card-bg: #1e1e1e;
-      --border: #333333;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: sans-serif;
-      margin: 0;
-      padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .header { display: flex; justify-content: space-between; align-items: center; }
-    .controls { margin: 20px 0; display: flex; gap: 10px; }
-    input, select, button, textarea {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--card-bg);
-      color: var(--text);
-    }
-
-    .project-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-    }
-    .tag { display: inline-block; background: #0070f3; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-    .comments-section { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 8px; }
-  </style>
 </head>
-<body>
+<body class="min-h-screen font-sans antialiased">
 
-  <div class="header">
-    <h1>My Projects</h1>
-    <button id="theme-toggle">🌙 ダークモード</button>
-  </div>
+  <!-- ヘッダー -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">
+        My Showcase
+      </h1>
+      <button id="theme-toggle" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:ring-2 ring-emerald-500 transition-all">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
 
-  <!-- 検索 & フィルター -->
-  <div class="controls">
-    <input type="text" id="search-input" placeholder="タイトルで検索...">
-    <select id="tag-filter">
-      <option value="">すべてのタグ</option>
-      <option value="Web">Web</option>
-      <option value="App">App</option>
-      <option value="Game">Game</option>
-    </select>
-  </div>
+  <main class="max-w-5xl mx-auto px-6 py-10">
 
-  <!-- プロジェクト一覧表示エリア -->
-  <div id="project-list">読み込み中...</div>
+    <!-- 検索 & タグフィルター -->
+    <section class="mb-10 flex flex-col sm:flex-row gap-4 items-center justify-between">
+      <div class="relative w-full sm:w-80">
+        <input type="text" id="search-input" placeholder="プロジェクトを検索..." 
+          class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+      </div>
 
-  <script>
-    // 1. Supabase 初期化
-    const SUPABASE_URL = 'https://wkwnovzxkafjbvdromru.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_UobG-NeXrSQQFPduyfba7A_MSUQ0o6Y';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      <div class="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0" id="tag-buttons">
+        <button data-tag="" class="tag-btn active px-4 py-2 rounded-xl text-sm font-medium bg-emerald-500 text-white transition">すべて</button>
+        <button data-tag="Web" class="tag-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500/10 transition">Web</button>
+        <button data-tag="App" class="tag-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500/10 transition">App</button>
+        <button data-tag="Game" class="tag-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500/10 transition">Game</button>
+      </div>
+    </section>
 
-    // 2. ダーク / ライトモード切り替え
-    const themeBtn = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', currentTheme);
+    <!-- プロジェクト一覧グリッド -->
+    <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="col-span-full text-center py-12 text-slate-400">読み込み中...</div>
+    </div>
 
-    themeBtn.addEventListener('click', () => {
-      const mode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', mode);
-      localStorage.setItem('theme', mode);
-      themeBtn.textContent = mode === 'dark' ? '☀️ ライトモード' : '🌙 ダークモード';
-    });
+  </main>
 
-    // 3. プロジェクトデータ取得 & 検索
-    let allProjects = [];
-
-    async function fetchProjects() {
-      const { data, error } = await supabaseClient
-        .from('projects')
-        .select('*, comments(*)');
-      
-      if (error) {
-        console.error(error);
-        document.getElementById('project-list').innerText = 'データの取得に失敗しました';
-        return;
-      }
-      allProjects = data;
-      renderProjects();
-    }
-
-    function renderProjects() {
-      const keyword = document.getElementById('search-input').value.toLowerCase();
-      const selectedTag = document.getElementById('tag-filter').value;
-
-      const filtered = allProjects.filter(p => {
-        const matchKeyword = p.title.toLowerCase().includes(keyword) || (p.description && p.description.toLowerCase().includes(keyword));
-        const matchTag = selectedTag === '' || p.tag === selectedTag;
-        return matchKeyword && matchTag;
-      });
-
-      const listEl = document.getElementById('project-list');
-      listEl.innerHTML = filtered.map(p => `
-        <div class="project-card">
-          <h3>${escapeHtml(p.title)} <span class="tag">${escapeHtml(p.tag || 'なし')}</span></h3>
-          <p>${escapeHtml(p.description || '')}</p>
-
-          <!-- コメント一覧 -->
-          <div class="comments-section">
-            <h4>コメント (${p.comments ? p.comments.length : 0})</h4>
-            <ul>
-              ${(p.comments || []).map(c => `<li><strong>${escapeHtml(c.user_name)}:</strong>${escapeHtml(c.content)}</li>`).join('')}
-            </ul>
-            <!-- コメント投稿フォーム -->
-            <input type="text" id="name-${p.id}" placeholder="お名前" style="width: 100px;">
-            <input type="text" id="comment-${p.id}" placeholder="コメントを書く...">
-            <button onclick="addComment(${p.id})">送信</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // 4. コメント追加機能
-    async function addComment(projectId) {
-      const nameInput = document.getElementById(`name-${projectId}`);
-      const contentInput = document.getElementById(`comment-${projectId}`);
-
-      if (!contentInput.value.trim()) return alert('コメントを入力してください');
-
-      const { error } = await supabaseClient
-        .from('comments')
-        .insert([{
-          project_id: projectId,
-          user_name: nameInput.value.trim() || '名無し',
-          content: contentInput.value.trim()
-        }]);
-
-      if (error) {
-        alert('投稿に失敗しました');
-      } else {
-        fetchProjects(); // 再読み込み
-      }
-    }
-
-    // ユーティリティ: XSS対策
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-    }
-
-    // イベントリスナー設定
-    document.getElementById('search-input').addEventListener('input', renderProjects);
-    document.getElementById('tag-filter').addEventListener('change', renderProjects);
-
-    // 初期ロード
-    fetchProjects();
-  </script>
+  <!-- メインJavaScriptの読み込み -->
+  <script src="script.js"></script>
 </body>
 </html>
