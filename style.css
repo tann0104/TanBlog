@@ -1,40 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
-@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap');
 
-/* 全体設定 & アニメーション */
+/* 全体設定 */
 body {
-  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
+  background-color: #fdf2f8; /* ふんわりピンク/ピンク50 */
+  color: #4a5568;
 }
 
-/* ダークモード設定 */
+/* ダークモード（やわらかいダークパープル/ピンク） */
 html.dark body {
-  background-color: #020617; /* slate-950 */
-  color: #f8fafc; /* slate-50 */
+  background-color: #1e1b2e;
+  color: #f3e8ff;
 }
 
-/* カスタムスクロールバー（コメントエリア用） */
+/* カスタムスクロールバー */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #fbcfe8;
+  border-radius: 9999px;
 }
 html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #4c1d95;
 }
 
-/* カードホバーエフェクト */
-.project-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* カードの弾むホバーエフェクト */
+.cute-card {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.cute-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(244, 114, 182, 0.2), 0 8px 10px -6px rgba(244, 114, 182, 0.1);
+}
+
+/* ボタンのぽよんアニメーション */
+.cute-btn {
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cute-btn:hover {
+  transform: scale(1.08);
+}
+.cute-btn:active {
+  transform: scale(0.95);
 }
